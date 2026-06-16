@@ -57,6 +57,8 @@ const IngredientsList = ({ingredients}) => {
         
 
         </div>
+        }{
+          loading && <div>Generating Recipe...</div>
         }
         {showRecipe && <Recipe recipe={recipe} />}
         {error && <div>
