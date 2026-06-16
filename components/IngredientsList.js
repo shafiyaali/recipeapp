@@ -5,8 +5,12 @@ const IngredientsList = ({ingredients}) => {
 
     const [recipe, setRecipe] = useState();
     const [showRecipe, setShowRecipe] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState();
     const getRecipe = async () => {
-        const response = await fetch("api/recipe", {
+      setLoading(true)
+      try{
+         const response = await fetch("api/recipe", {
             method :"POST",
             headers: {
         "Content-Type": "application/json",
@@ -15,11 +19,15 @@ const IngredientsList = ({ingredients}) => {
                 ingredients
             })
         })
-
         const data = await response.json();
-        console.log(data);
         setRecipe(data);
         setShowRecipe(true)
+      } 
+       catch(e){
+          setError("Failed to Load recipe. Try again after some time")
+       } finally {
+        setLoading(false)
+       }
 
     }
   return (
@@ -44,13 +52,16 @@ const IngredientsList = ({ingredients}) => {
             </div>
             <div className='flex items-end'>
             <button className='bg-[#D17557] p-2 sm:px-4 sm:py-2 rounded-md text-gray-100 font-medium '
-            onClick={getRecipe}>Get a recipe</button>
+            onClick={getRecipe} disabled={loading}>Get a recipe</button>
             </div>
         
 
         </div>
         }
         {showRecipe && <Recipe recipe={recipe} />}
+        {error && <div>
+          {error}
+        </div> }
     </>
   )
 }
